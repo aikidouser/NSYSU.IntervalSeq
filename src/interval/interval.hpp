@@ -3,19 +3,12 @@
 
 // Full Interval
 class interval {
-private:
-  int s; // start
-  int e; // end
-  int l; // length
-
 public:
+  const int s;
+  const int e;
+  const int l;
   interval(int start, int end);
   ~interval() {}
-
-  // Getter
-  int get_s() const;
-  int get_e() const;
-  int len() const;
 };
 
 #endif
