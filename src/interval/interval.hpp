@@ -11,4 +11,9 @@ public:
   ~interval() {}
 };
 
+bool operator<(interval &x, interval &y);
+bool operator<=(interval &x, interval &y);
+bool operator>(interval &x, interval &y);
+bool operator>=(interval &x, interval &y);
+
 #endif
