@@ -10,7 +10,15 @@ interval::interval(int start, int end) : s(start), e(end), l(e - s + 1) {
   }
 }
 
-bool operator<(interval &x, interval &y) { return x.s < y.s && x.e < y.e; }
-bool operator<=(interval &x, interval &y) { return x.s <= y.s && x.e <= y.e; }
-bool operator>(interval &x, interval &y) { return x.s > y.s && x.e > y.e; }
-bool operator>=(interval &x, interval &y) { return x.s >= y.s && x.e >= y.e; }
+bool operator<(const interval &x, const interval &y) {
+  return x.s < y.s && x.e < y.e;
+}
+bool operator<=(const interval &x, const interval &y) {
+  return x.s <= y.s && x.e <= y.e;
+}
+bool operator>(const interval &x, const interval &y) {
+  return x.s > y.s && x.e > y.e;
+}
+bool operator>=(const interval &x, const interval &y) {
+  return x.s >= y.s && x.e >= y.e;
+}
