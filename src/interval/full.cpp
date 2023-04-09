@@ -15,6 +15,13 @@ using std::upper_bound;
 
 int full::get_val() { return val; }
 
+bool operator<(const full &lhs, const full &rhs) {
+  return lhs.s < rhs.s && lhs.e < rhs.e && lhs.e < rhs.s;
+}
+bool operator>(const full &lhs, const full &rhs) {
+  return lhs.s > rhs.s && lhs.e > rhs.e && lhs.e > rhs.s;
+}
+
 bool full::val_comp(const shared_ptr<full> &x, const shared_ptr<full> &y) {
   return x->val < y->val;
 }
@@ -43,4 +50,45 @@ int miis_full_algo(const deque<interval> &interval_seq) {
     cout << endl;
   }
   return T.size();
+}
+
+bool miis_full_check(const deque<interval> &interval_seq, const int &q) {
+  bool check_a = false, check_b = false;
+
+  check_a = miis_full_comb(interval_seq, q);
+  check_b = miis_full_comb(interval_seq, q + 1);
+
+  return check_a == true && check_b == false;
+}
+
+bool miis_full_comb(const std::deque<interval> &interval_seq, const int &q) {
+  bool check = false;
+  int n = interval_seq.size();
+  deque<full> buffer;
+  deque<bool> mask(q, true);
+  mask.resize(n, false);
+
+  do {
+    buffer.clear();
+    for (int i = 0; i < n; i++) {
+      if (mask[i]) {
+        if (buffer.empty()) {
+          buffer.emplace_back(full(interval_seq.at(i)));
+        } else {
+          full f_interval = full(interval_seq.at(i));
+          if (buffer.back() < f_interval)
+            buffer.push_back(f_interval);
+          else
+            break;
+        }
+      }
+    }
+    for (auto i : buffer)
+      cout << i.get_val() << " ";
+    cout << endl;
+    if (buffer.size() == q)
+      return true;
+  } while (std::prev_permutation(mask.begin(), mask.end()));
+
+  return check;
 }

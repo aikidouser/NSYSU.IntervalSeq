@@ -16,6 +16,7 @@ using std::map;
 using std::string;
 
 int main(int argc, char *argv[]) {
+  int q = 0;
   map<string, bool> arg_map;
   deque<interval> interval_seq;
 
@@ -36,7 +37,12 @@ int main(int argc, char *argv[]) {
 
   interval_seq = get_input();
 
-  cout << miis_full_algo(interval_seq) << endl;
+  q = miis_full_algo(interval_seq);
+  if (miis_full_check(interval_seq, q)) {
+    cout << "same" << endl;
+  } else {
+    cout << "something wrong" << endl;
+  }
 
   return 0;
 }
