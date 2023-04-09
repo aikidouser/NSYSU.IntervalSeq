@@ -7,4 +7,4 @@ set (CMAKE_CXX_FLAGS "-Wall -std=c++14")
 
 project(IntervalSequence)
 
-add_executable(Interval main.cpp interval/interval.cpp)
+add_executable(Interval main.cpp interval/interval.cpp interval/full.cpp)

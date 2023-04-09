@@ -3,6 +3,7 @@
 #include <map>
 #include <string>
 
+#include "interval/full.hpp"
 #include "interval/interval.hpp"
 
 std::deque<interval> get_input();
@@ -21,13 +22,7 @@ int main(int argc, char *argv[]) {
   for (int i = 0; i < argc; i++) {
     string arg_str = static_cast<string>(argv[i]);
 
-    if (arg_str == "--all") {
-      arg_map["longest"] = true;
-      arg_map["most"] = true;
-      arg_map["single"] = true;
-      arg_map["sub"] = true;
-      arg_map["full"] = true;
-    } else if (arg_str == "-l")
+    if (arg_str == "-l")
       arg_map["longest"] = true;
     else if (arg_str == "-m")
       arg_map["most"] = true;
@@ -40,6 +35,8 @@ int main(int argc, char *argv[]) {
   }
 
   interval_seq = get_input();
+
+  cout << miis_full_algo(interval_seq) << endl;
 
   return 0;
 }
