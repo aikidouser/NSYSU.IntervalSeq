@@ -6,6 +6,7 @@
 // Full Interval
 class interval {
 private:
+  int val;
   std::shared_ptr<interval> prev;
 
 public:
@@ -16,12 +17,19 @@ public:
   interval(int start, int end);
   ~interval() {}
 
+  int get_val();
   void set_prev(const std::shared_ptr<interval> &prev);
+
+  static bool val_comp(const std::shared_ptr<interval> &x,
+                       const std::shared_ptr<interval> &y);
 };
 
-bool operator<(const interval &x, const interval &y);
-bool operator<=(const interval &x, const interval &y);
-bool operator>(const interval &x, const interval &y);
-bool operator>=(const interval &x, const interval &y);
+bool operator<(const interval &lhs, const interval &rhs);
+bool operator>(const interval &lhs, const interval &rhs);
+
+// bool operator<(const interval &x, const interval &y);
+// bool operator<=(const interval &x, const interval &y);
+// bool operator>(const interval &x, const interval &y);
+// bool operator>=(const interval &x, const interval &y);
 
 #endif

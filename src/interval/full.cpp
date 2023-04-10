@@ -13,26 +13,14 @@ using std::prev;
 using std::shared_ptr;
 using std::upper_bound;
 
-int full::get_val() { return val; }
-
-bool operator<(const full &lhs, const full &rhs) {
-  return lhs.s < rhs.s && lhs.e < rhs.e && lhs.e < rhs.s;
-}
-bool operator>(const full &lhs, const full &rhs) {
-  return lhs.s > rhs.s && lhs.e > rhs.e && lhs.e > rhs.s;
-}
-
-bool full::val_comp(const shared_ptr<full> &x, const shared_ptr<full> &y) {
-  return x->val < y->val;
-}
-
 int miis_full_algo(const deque<interval> &interval_seq) {
-  deque<shared_ptr<full>> T;
+  deque<shared_ptr<interval>> T;
 
-  T.emplace_back(make_shared<full>(interval_seq.at(0)));
+  T.emplace_back(make_shared<interval>(interval_seq.at(0)));
   for (size_t i = 1; i < interval_seq.size(); i++) {
-    shared_ptr<full> cur_interval = make_shared<full>(interval_seq.at(i));
-    auto it = upper_bound(T.begin(), T.end(), cur_interval, full::val_comp);
+    shared_ptr<interval> cur_interval =
+        make_shared<interval>(interval_seq.at(i));
+    auto it = upper_bound(T.begin(), T.end(), cur_interval, interval::val_comp);
 
     if (it == T.begin()) {
       *it = cur_interval;
@@ -64,7 +52,7 @@ bool miis_full_check(const deque<interval> &interval_seq, const int &q) {
 bool miis_full_comb(const std::deque<interval> &interval_seq, const int &q) {
   bool check = false;
   int n = interval_seq.size();
-  deque<full> buffer;
+  deque<interval> buffer;
   deque<bool> mask(q, true);
   mask.resize(n, false);
 
@@ -73,19 +61,18 @@ bool miis_full_comb(const std::deque<interval> &interval_seq, const int &q) {
     for (int i = 0; i < n; i++) {
       if (mask[i]) {
         if (buffer.empty()) {
-          buffer.emplace_back(full(interval_seq.at(i)));
+          buffer.push_back(interval_seq.at(i));
         } else {
-          full f_interval = full(interval_seq.at(i));
-          if (buffer.back() < f_interval)
-            buffer.push_back(f_interval);
+          if (buffer.back() < interval_seq.at(i))
+            buffer.push_back(interval_seq.at(i));
           else
             break;
         }
       }
     }
-    for (auto i : buffer)
-      cout << i.get_val() << " ";
-    cout << endl;
+    // for (auto i : buffer)
+    //   cout << i.get_val() << " ";
+    // cout << endl;
     if (buffer.size() == q)
       return true;
   } while (std::prev_permutation(mask.begin(), mask.end()));
