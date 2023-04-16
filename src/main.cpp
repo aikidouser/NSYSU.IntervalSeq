@@ -5,6 +5,7 @@
 
 #include "interval/full.hpp"
 #include "interval/interval.hpp"
+#include "interval/sub.hpp"
 
 std::deque<interval> get_input();
 
@@ -37,12 +38,16 @@ int main(int argc, char *argv[]) {
 
   interval_seq = get_input();
 
-  q = miis_full_algo(interval_seq);
-  if (miis_full_check(interval_seq, q)) {
-    cout << "same" << endl;
-  } else {
-    cout << "something wrong" << endl;
-  }
+  // q = miis_full_algo(interval_seq);
+  // if (miis_full_check(interval_seq, q)) {
+  //   cout << "same" << endl;
+  // } else {
+  //   cout << "something wrong" << endl;
+  // }
+
+  int temp = 0;
+  cin >> temp;
+  sub::set_c(temp);
 
   return 0;
 }

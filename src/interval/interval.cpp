@@ -14,6 +14,14 @@ interval::interval(int start, int end)
 }
 
 int interval::get_val() { return val; }
+
+bool interval::set_val(int v) {
+  if (s <= v && v <= e) {
+    val = v;
+    return true;
+  }
+  return false;
+}
 void interval::set_prev(const shared_ptr<interval> &prev) { this->prev = prev; }
 
 bool interval::val_comp(const shared_ptr<interval> &x,

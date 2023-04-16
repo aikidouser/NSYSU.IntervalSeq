@@ -18,6 +18,8 @@ public:
   ~interval() {}
 
   int get_val();
+
+  bool set_val(int v);
   void set_prev(const std::shared_ptr<interval> &prev);
 
   static bool val_comp(const std::shared_ptr<interval> &x,
