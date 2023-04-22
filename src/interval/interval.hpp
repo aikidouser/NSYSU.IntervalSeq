@@ -17,7 +17,7 @@ public:
   interval(int start, int end);
   ~interval() {}
 
-  int get_val();
+  int get_val() const;
 
   bool set_val(int v);
   void set_prev(const std::shared_ptr<interval> &prev);

@@ -19,8 +19,14 @@ int sub::get_c() { return sub::c; }
 
 void sub::set_c(int c) { sub::c = c; }
 
-bool operator<(const sub &lhs, const sub &rhs) {}
-bool operator>(const sub &lhe, const sub &rhs) {}
+bool operator<(const sub &lhs, const sub &rhs) {
+  return lhs.s < rhs.s && lhs.e < rhs.e && // basic interval comparison
+         lhs.get_val() + sub::get_c() <= rhs.e;
+}
+bool operator>(const sub &lhs, const sub &rhs) {
+  return lhs.s > rhs.s && lhs.e > rhs.e && // basic interval comparison
+         lhs.e >= rhs.get_val() + sub::get_c();
+}
 
 // int miis_sub_algo(const deque<interval> &interval_seq) {
 //   deque<shared_ptr<sub>> T;
