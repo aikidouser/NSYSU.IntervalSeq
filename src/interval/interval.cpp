@@ -13,7 +13,7 @@ interval::interval(int start, int end)
   }
 }
 
-int interval::get_val() { return val; }
+int interval::get_val() const { return val; }
 
 bool interval::set_val(int v) {
   if (s <= v && v <= e) {
