@@ -45,9 +45,10 @@ int main(int argc, char *argv[]) {
   //   cout << "something wrong" << endl;
   // }
 
-  int temp = 0;
-  cin >> temp;
-  sub::set_c(temp);
+  sub::set_c(3);
+
+  q = miis_sub_algo(interval_seq);
+  cout << q << endl;
 
   return 0;
 }

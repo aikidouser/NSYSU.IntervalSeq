@@ -28,28 +28,37 @@ bool operator>(const sub &lhs, const sub &rhs) {
          lhs.e >= rhs.get_val() + sub::get_c();
 }
 
-// int miis_sub_algo(const deque<interval> &interval_seq) {
-//   deque<shared_ptr<sub>> T;
-//
-//   T.emplace_back(make_shared<sub>(interval_seq.at(0),
-//                                   interval_seq.at(0).s + sub::get_c() - 1));
-//   for (size_t i = 1; i < interval_seq.size(); i++) {
-//     shared_ptr<sub> cur = make_shared<sub>(interval_seq.at(i));
-//     auto up = upper_bound(T.begin(), T.end(), cur, interval::val_comp);
-//
-//     // TODO :
-//     for (auto it = up; it >= T.begin(); it--) {
-//       shared_ptr<sub> pre = *prev(it);
-//       if (it == T.begin()) {
-//         cur->set_val(cur->s + sub::get_c() - 1);
-//         *it = cur;
-//       } else if (it == T.end() && cur->e >= pre->get_val() + sub::get_c()) {
-//         cur->set_val(max(*prev(it)));
-//         cur->set_prev(*prev(it));
-//         T.push_back(cur);
-//       } else {
-//       }
-//     }
-//   }
-//   return T.size();
-// }
+int miis_sub_algo(const deque<interval> &interval_seq) {
+  deque<shared_ptr<sub>> T;
+
+  T.emplace_back(make_shared<sub>(interval_seq.at(0),
+                                  interval_seq.at(0).s + sub::get_c() - 1));
+
+  for (size_t i = 1; i < interval_seq.size(); i++) {
+    shared_ptr<sub> cur = make_shared<sub>(interval_seq.at(i));
+    auto up = upper_bound(T.begin(), T.end(), cur, interval::val_comp);
+
+    for (auto t = up; t >= T.begin(); t--) {
+      if (t != T.end() && (*t)->get_val() <= cur->s + sub::get_c() - 1)
+        break;
+      if (t == T.begin()) {
+        if (cur->set_val(cur->s + sub::get_c() - 1))
+          *t = cur;
+      } else {
+        shared_ptr<sub> prev_t = *prev(t);
+
+        if (!(*prev_t < *cur))
+          break;
+        if (cur->set_val(max(cur->s + sub::get_c() - 1,
+                             prev_t->get_val() + sub::get_c()))) {
+          cur->set_prev(prev_t);
+          if (t == T.end())
+            T.push_back(cur);
+          else
+            *t = cur;
+        }
+      }
+    }
+  }
+  return T.size();
+}
