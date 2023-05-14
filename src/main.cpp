@@ -49,6 +49,10 @@ int main(int argc, char *argv[]) {
 
   q = miis_sub_algo(interval_seq);
   cout << q << endl;
+  if (miis_sub_check(interval_seq, q))
+    cout << "same" << endl;
+  if (!miis_sub_check(interval_seq, q + 1))
+    cout << "there are not any longer answer" << endl;
 
   return 0;
 }

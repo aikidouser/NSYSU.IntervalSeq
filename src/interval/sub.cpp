@@ -62,3 +62,33 @@ int miis_sub_algo(const deque<interval> &interval_seq) {
   }
   return T.size();
 }
+
+bool miis_sub_check(const std::deque<interval> &interval_seq, const int &q) {
+  int n = interval_seq.size();
+  deque<sub> buffer;
+  deque<bool> mask(q, true);
+  mask.resize(n, false);
+
+  do {
+    buffer.clear();
+    for (int i = 0; i < n; i++) {
+      if (mask[i]) {
+        sub cur = interval_seq.at(i);
+
+        if (buffer.empty()) {
+          buffer.emplace_back(sub(cur, cur.s + sub::get_c() - 1));
+        } else {
+          if (buffer.back() < cur)
+            buffer.emplace_back(
+                sub(cur, buffer.back().get_val() + sub::get_c()));
+          else
+            break;
+        }
+      }
+    }
+    if (buffer.size() == q)
+      return true;
+  } while (std::prev_permutation(mask.begin(), mask.end()));
+
+  return false;
+}
