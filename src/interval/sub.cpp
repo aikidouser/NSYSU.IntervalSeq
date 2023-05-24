@@ -48,7 +48,7 @@ int miis_sub_algo(const deque<interval> &interval_seq) {
         shared_ptr<sub> prev_t = *prev(t);
 
         if (!(*prev_t < *cur))
-          break;
+          continue;
         if (cur->set_val(max(cur->s + sub::get_c() - 1,
                              prev_t->get_val() + sub::get_c()))) {
           cur->set_prev(prev_t);
