@@ -20,7 +20,7 @@ int miis_full_algo(const deque<interval> &interval_seq) {
   for (size_t i = 1; i < interval_seq.size(); i++) {
     shared_ptr<interval> cur_interval =
         make_shared<interval>(interval_seq.at(i));
-    auto it = upper_bound(T.begin(), T.end(), cur_interval, interval::val_comp);
+    auto it = upper_bound(T.begin(), T.end(), cur_interval, interval::end_comp);
 
     if (it == T.begin()) {
       *it = cur_interval;
@@ -32,10 +32,6 @@ int miis_full_algo(const deque<interval> &interval_seq) {
       }
       cur_interval->set_prev(*prev(it));
     }
-    cout << "T: ";
-    for (auto j : T)
-      cout << j->get_val() << ", ";
-    cout << endl;
   }
   return T.size();
 }

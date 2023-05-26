@@ -24,6 +24,8 @@ public:
 
   static bool val_comp(const std::shared_ptr<interval> &x,
                        const std::shared_ptr<interval> &y);
+  static bool end_comp(const std::shared_ptr<interval> &lhs,
+                       const std::shared_ptr<interval> &rhs);
 };
 
 bool operator<(const interval &lhs, const interval &rhs);

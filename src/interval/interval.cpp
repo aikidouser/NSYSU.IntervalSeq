@@ -29,6 +29,11 @@ bool interval::val_comp(const shared_ptr<interval> &x,
   return x->val < y->val;
 }
 
+bool interval::end_comp(const shared_ptr<interval> &lhs,
+                        const shared_ptr<interval> &rhs) {
+  return lhs->e < rhs->e;
+}
+
 bool operator<(const interval &lhs, const interval &rhs) {
   return lhs.s < rhs.s && lhs.e < rhs.e && lhs.e < rhs.s;
 }
