@@ -39,21 +39,21 @@ int main(int argc, char *argv[]) {
 
   interval_seq = get_input();
 
-  // q = miis_full_algo(interval_seq);
-  // if (miis_full_check(interval_seq, q)) {
-  //   cout << "same" << endl;
-  // } else {
-  //   cout << "something wrong" << endl;
-  // }
-
-  sub::set_c(3);
-
-  q = miis_sub_algo(interval_seq);
+  q = miis_full_algo(interval_seq);
   cout << q << endl;
-  if (miis_sub_check(interval_seq, q))
-    cout << "same" << endl;
-  if (!miis_sub_check(interval_seq, q + 1))
-    cout << "there are not any longer answer" << endl;
+  if (miis_full_check(interval_seq, q))
+    cout << "correct" << endl;
+  else
+    cout << "something wrong" << endl;
+
+  // sub::set_c(3);
+
+  // q = miis_sub_algo(interval_seq);
+  // cout << q << endl;
+  // if (miis_sub_check(interval_seq, q))
+  //   cout << "same" << endl;
+  // if (!miis_sub_check(interval_seq, q + 1))
+  //   cout << "there are not any longer answer" << endl;
 
   return 0;
 }
