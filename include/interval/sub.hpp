@@ -3,7 +3,7 @@
 
 #include <deque>
 
-#include "interval.hpp"
+#include <interval/interval.hpp>
 
 class sub : public interval {
 private:

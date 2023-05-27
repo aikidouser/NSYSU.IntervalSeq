@@ -4,9 +4,9 @@
 #include <string>
 
 // #include "arg_parser.h"
-#include "interval/full.hpp"
-#include "interval/interval.hpp"
-#include "interval/sub.hpp"
+#include <interval/full.hpp>
+#include <interval/interval.hpp>
+#include <interval/sub.hpp>
 
 std::deque<interval> get_input();
 
