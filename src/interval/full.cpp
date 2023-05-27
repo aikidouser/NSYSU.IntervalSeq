@@ -3,7 +3,7 @@
 #include <iostream>
 #include <memory>
 
-#include "full.hpp"
+#include "interval/full.hpp"
 
 using std::cout;
 using std::deque;

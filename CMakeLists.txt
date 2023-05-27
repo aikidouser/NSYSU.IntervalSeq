@@ -1,0 +1,21 @@
+cmake_minimum_required(VERSION 3.22)
+
+set(PROJECT_NAME "IntervalSeq")
+set(PROJECT_DESCRIPTION "implement the algorithm of MIIS and LIIS")
+set(LIBRARY_NAME "Interval")
+
+project(${PROJECT_NAME})
+
+set(SRC_DIR ${PROJECT_SOURCE_DIR}/src)
+set(INC_DIR ${PROJECT_SOURCE_DIR}/include)
+
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+set(CMAKE_CXX_FLAGS "-Wall")
+
+message("CMAKE_SOURCE_DIR = ${CMAKE_SOURCE_DIR}")
+message("CMAKE_BINARY_DIR = ${CMAKE_BINARY_DIR}")
+
+add_subdirectory(src)

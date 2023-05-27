@@ -2,7 +2,7 @@
 #include <iostream>
 #include <memory>
 
-#include "sub.hpp"
+#include "interval/sub.hpp"
 
 using std::cout;
 using std::deque;

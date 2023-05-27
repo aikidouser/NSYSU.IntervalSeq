@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <stdexcept>
 
-#include "interval.hpp"
+#include "interval/interval.hpp"
 
 using std::shared_ptr;
 
