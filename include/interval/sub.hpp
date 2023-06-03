@@ -25,5 +25,6 @@ bool operator>(const sub &lhe, const sub &rhs);
 
 int miis_sub_algo(const std::deque<interval> &interval_seq);
 bool miis_sub_check(const std::deque<interval> &interval_seq, const int &q);
+bool miis_sub_comb(const std::deque<interval> &interval_seq, const int &q);
 
 #endif

@@ -63,7 +63,16 @@ int miis_sub_algo(const deque<interval> &interval_seq) {
   return T.size();
 }
 
-bool miis_sub_check(const std::deque<interval> &interval_seq, const int &q) {
+bool miis_sub_check(const deque<interval> &interval_seq, const int &q) {
+  bool check_a = false, check_b = false;
+
+  check_a = miis_sub_comb(interval_seq, q);
+  check_b = miis_sub_comb(interval_seq, q + 1);
+
+  return check_a == true && check_b == false;
+}
+
+bool miis_sub_comb(const std::deque<interval> &interval_seq, const int &q) {
   int n = interval_seq.size();
   deque<sub> buffer;
   deque<bool> mask(q, true);
