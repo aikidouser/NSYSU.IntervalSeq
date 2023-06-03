@@ -2,6 +2,7 @@ project(${PROJECT_NAME})
 
 add_executable(${PROJECT_NAME}
   main.cpp 
+  arg_parser.cpp
 )
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_14)
