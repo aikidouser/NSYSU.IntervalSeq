@@ -18,7 +18,8 @@ using std::endl;
 using std::string;
 
 int main(int argc, char *argv[]) {
-  int q = 0;
+  size_t l = 0;
+  size_t q = 0;
   arg_table arg_t(argc, argv);
   deque<interval> interval_seq;
 
@@ -44,6 +45,8 @@ int main(int argc, char *argv[]) {
   } else if (arg_t.type == "longest") {
     cout << "LIIS - ";
     if (arg_t.comp == "full") {
+      l = liis_full_algo(interval_seq);
+      cout << "full: " << l << endl;
     } else if (arg_t.comp == "sub") {
     }
   }
