@@ -1,4 +1,6 @@
 #include <algorithm>
+#include <bitset>
+#include <cmath>
 #include <deque>
 #include <iostream>
 #include <map>
@@ -7,17 +9,22 @@
 
 #include <interval/full.hpp>
 
+using std::bitset;
+using std::deque;
+using std::pair;
+using std::set;
+using std::shared_ptr;
+
 using std::cerr;
 using std::cout;
-using std::deque;
+
 using std::endl;
 using std::lower_bound;
 using std::make_pair;
 using std::make_shared;
-using std::pair;
+using std::pow;
 using std::prev;
-using std::set;
-using std::shared_ptr;
+
 using std::upper_bound;
 
 // TODO : use list to trace
@@ -84,24 +91,17 @@ bool miis_full_comb(const std::deque<interval> &interval_seq, const size_t &q) {
   return check;
 }
 
-bool pair_comp(const pair<int, int> &lhs, const pair<int, int> &rhs) {
-  if (lhs.first < rhs.first)
-    return true;
-  else if (lhs.first == rhs.first) {
-    return lhs.second > rhs.second;
-  }
-  return false;
-}
-
 int liis_full_algo(const std::deque<interval> &interval_seq) {
   deque<int> trace(interval_seq.size(), -1);
-  set<pair<int, int>, decltype(pair_comp) *> T(pair_comp);
+  set<pair<int, int>> T;
 
   T.emplace(make_pair(interval_seq.at(0).e, interval_seq.at(0).l));
   for (size_t i = 0; i < interval_seq.size(); i++) {
     const interval &cur = interval_seq.at(i);
     pair<int, int> cur_pair(cur.s, cur.l);
-    auto s_low = lower_bound(T.begin(), T.end(), cur_pair, pair_comp);
+    auto s_low = lower_bound(T.begin(), T.end(), cur_pair);
+
+    // cout << "[" << cur.s << ", " << cur.e << "] - " << cur.l << " : ";
 
     if (s_low == T.begin()) {
       cur_pair.first = cur.e;
@@ -110,7 +110,7 @@ int liis_full_algo(const std::deque<interval> &interval_seq) {
       cur_pair.second += prev(s_low)->second;
     }
 
-    auto e_low = upper_bound(T.begin(), T.end(), cur_pair, pair_comp);
+    auto e_low = upper_bound(T.begin(), T.end(), cur_pair);
     if (e_low != T.begin()) {
       if (prev(e_low)->second >= cur_pair.second)
         continue;
@@ -122,4 +122,34 @@ int liis_full_algo(const std::deque<interval> &interval_seq) {
     T.insert(cur_pair);
   }
   return T.rbegin()->second;
+}
+
+bool liis_full_check(const std::deque<interval> &interval_seq,
+                     const size_t &l) {
+  const size_t bitset_size = 64;
+  size_t case_num = pow(2, interval_seq.size());
+
+  if (interval_seq.size() > bitset_size)
+    cerr << "too long" << endl;
+
+  for (size_t i = 1; i <= case_num; i++) {
+    pair<int, size_t> buffer(-1, 0);
+    bitset<bitset_size> mask(i);
+
+    for (size_t j = 0; j < interval_seq.size(); j++) {
+      if (mask.test(j)) {
+        interval cur = interval_seq.at(j);
+        if (cur.s > buffer.first) {
+          buffer.first = cur.e;
+          buffer.second += cur.l;
+        } else {
+          break;
+        }
+      }
+    }
+    if (buffer.second == l) {
+      return true;
+    }
+  }
+  return false;
 }

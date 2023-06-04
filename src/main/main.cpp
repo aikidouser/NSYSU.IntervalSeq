@@ -47,6 +47,10 @@ int main(int argc, char *argv[]) {
     if (arg_t.comp == "full") {
       l = liis_full_algo(interval_seq);
       cout << "full: " << l << endl;
+      if (liis_full_check(interval_seq, l))
+        cout << "CORRECT" << endl;
+      else
+        cout << "ERROR" << endl;
     } else if (arg_t.comp == "sub") {
     }
   }
