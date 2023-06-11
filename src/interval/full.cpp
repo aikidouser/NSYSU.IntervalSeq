@@ -24,7 +24,6 @@ using std::make_pair;
 using std::make_shared;
 using std::pow;
 using std::prev;
-
 using std::upper_bound;
 
 // TODO : use list to trace

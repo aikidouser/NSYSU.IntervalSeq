@@ -6,7 +6,7 @@
 // Full Interval
 class interval {
 private:
-  int val;
+  // int val;
   std::shared_ptr<interval> prev;
 
 public:
@@ -17,13 +17,13 @@ public:
   interval(int start, int end);
   ~interval() {}
 
-  int get_val() const;
+  // int get_val() const;
 
-  bool set_val(int v);
+  // bool set_val(int v);
   void set_prev(const std::shared_ptr<interval> &prev);
 
-  static bool val_comp(const std::shared_ptr<interval> &x,
-                       const std::shared_ptr<interval> &y);
+  // static bool val_comp(const std::shared_ptr<interval> &x,
+  //                      const std::shared_ptr<interval> &y);
   static bool end_comp(const std::shared_ptr<interval> &lhs,
                        const std::shared_ptr<interval> &rhs);
 };

@@ -1,23 +1,40 @@
 #include <algorithm>
+#include <bitset>
+#include <cmath>
 #include <iostream>
 #include <memory>
 
 #include <interval/sub.hpp>
 
+using std::bitset;
+using std::cerr;
 using std::cout;
 using std::deque;
 using std::endl;
 using std::make_shared;
 using std::max;
+using std::pair;
 using std::prev;
 using std::shared_ptr;
 using std::upper_bound;
 
 int sub::c;
 
+int sub::get_val() const { return val; }
 int sub::get_c() { return sub::c; }
 
+bool sub::set_val(int v) {
+  if (s <= v && v <= e) {
+    val = v;
+    return true;
+  }
+  return false;
+}
 void sub::set_c(int c) { sub::c = c; }
+
+bool sub::val_comp(const shared_ptr<sub> &x, const shared_ptr<sub> &y) {
+  return x->val < y->val;
+}
 
 bool operator<(const sub &lhs, const sub &rhs) {
   return lhs.s < rhs.s && lhs.e < rhs.e && // basic interval comparison
@@ -36,7 +53,7 @@ int miis_sub_algo(const deque<interval> &interval_seq) {
 
   for (size_t i = 1; i < interval_seq.size(); i++) {
     shared_ptr<sub> cur = make_shared<sub>(interval_seq.at(i));
-    auto up = upper_bound(T.begin(), T.end(), cur, interval::val_comp);
+    auto up = upper_bound(T.begin(), T.end(), cur, sub::val_comp);
 
     for (auto t = up; t >= T.begin(); t--) {
       if (t != T.end() && (*t)->get_val() <= cur->s + sub::get_c() - 1)
@@ -100,4 +117,28 @@ bool miis_sub_comb(const std::deque<interval> &interval_seq, const int &q) {
   } while (std::prev_permutation(mask.begin(), mask.end()));
 
   return false;
+}
+
+int liis_sub_algo(const std::deque<interval> &interval_seq) {}
+
+bool liis_sub_check(const std::deque<interval> &interval_seq, const size_t &l) {
+  // const size_t bitset_size = 64;
+  // size_t case_num = pow(2, interval_seq.size());
+
+  // if (interval_seq.size() > bitset_size)
+  //   cerr << "too long" << endl;
+
+  // for (size_t i = 1; i <= case_num; i++) {
+  //   int val = 0, length = 0;
+  //   pair<int, int> temp(0, 0);
+  //   bitset<bitset_size> mask(i);
+
+  //   for (size_t j = 0; i < interval_seq.size(); j++) {
+  //     if (mask.test(j)) {
+  //       interval cur = interval_seq.at(j);
+  //       if (cur.s > temp.first && cur.e > temp.second) {
+  //       }
+  //     }
+  //   }
+  // }
 }
