@@ -122,23 +122,36 @@ bool miis_sub_comb(const std::deque<interval> &interval_seq, const int &q) {
 int liis_sub_algo(const std::deque<interval> &interval_seq) {}
 
 bool liis_sub_check(const std::deque<interval> &interval_seq, const size_t &l) {
-  // const size_t bitset_size = 64;
-  // size_t case_num = pow(2, interval_seq.size());
+  const size_t bitset_size = 64;
+  size_t case_num = pow(2, interval_seq.size());
 
-  // if (interval_seq.size() > bitset_size)
-  //   cerr << "too long" << endl;
+  if (interval_seq.size() > bitset_size)
+    cerr << "too long" << endl;
 
-  // for (size_t i = 1; i <= case_num; i++) {
-  //   int val = 0, length = 0;
-  //   pair<int, int> temp(0, 0);
-  //   bitset<bitset_size> mask(i);
+  for (size_t i = 1; i <= case_num; i++) {
+    size_t length = 0;
+    pair<int, int> prev(1, 0); // interval
+    bitset<bitset_size> mask(i);
 
-  //   for (size_t j = 0; i < interval_seq.size(); j++) {
-  //     if (mask.test(j)) {
-  //       interval cur = interval_seq.at(j);
-  //       if (cur.s > temp.first && cur.e > temp.second) {
-  //       }
-  //     }
-  //   }
-  // }
+    for (size_t j = 0; i < interval_seq.size(); j++) {
+      if (mask.test(j)) {
+        interval cur = interval_seq.at(j);
+
+        if (prev.first > prev.second) { // Init
+          prev.first = cur.s;
+          prev.second = cur.e;
+          length = cur.l;
+        } else if (cur.s > prev.first && cur.e > prev.second) {
+          prev.first = cur.s;
+          prev.second = cur.e;
+          length += cur.e - prev.second;
+        } else {
+          break;
+        }
+      }
+    }
+    if (length == l)
+      return true;
+  }
+  return false;
 }
