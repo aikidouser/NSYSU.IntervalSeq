@@ -20,6 +20,7 @@ using std::make_shared;
 using std::map;
 using std::max;
 using std::pair;
+using std::pow;
 using std::prev;
 using std::set;
 using std::shared_ptr;
@@ -98,7 +99,7 @@ bool miis_sub_check(const deque<interval> &interval_seq, const int &q) {
   return check_a == true && check_b == false;
 }
 
-bool miis_sub_comb(const std::deque<interval> &interval_seq, const int &q) {
+bool miis_sub_comb(const std::deque<interval> &interval_seq, const size_t &q) {
   int n = interval_seq.size();
   deque<sub> buffer;
   deque<bool> mask(q, true);
@@ -140,16 +141,22 @@ int liis_sub_algo(const std::deque<interval> &interval_seq) {
 
     // cout << "[" << cur.s << ", " << cur.e << "] - " << cur.l << ": " << endl;
 
+    if (T.empty()) {
+      T.emplace(cur.e, cur.l, cur.l);
+      continue;
+    }
+
     auto s_low = T.lower_bound(cur_tuple);
     // get<0>(cur_tuple) = cur.e;
     // Extend
     // cout << "s_low: [" << get<0>(*s_low) << ", " << get<1>(*s_low) << "] - "
-    //      << get<2>(*s_low) << ": " << endl;
+    //     << get<2>(*s_low) << ": " << endl;
     if (s_low == T.begin()) { // The first
       get<0>(cur_tuple) = cur.e;
       if (get<0>(cur_tuple) > get<0>(*s_low)) {
         get<1>(cur_tuple) = get<1>(*s_low) + get<0>(cur_tuple) - get<0>(*s_low);
         get<2>(cur_tuple) = get<1>(cur_tuple);
+        T.erase(s_low);
       }
     } else if (s_low == T.end()) { // Only can extend by predecessor
       get<0>(cur_tuple) = cur.e;
@@ -158,7 +165,7 @@ int liis_sub_algo(const std::deque<interval> &interval_seq) {
       int pred_len = cur.l + get<2>(*prev(s_low));
       // cout << "pred_len: " << pred_len << endl;
       int succ_len = 0;
-      if (cur.s > get<0>(*s_low) - get<1>(*s_low) + 1)
+      if (cur.s > get<0>(*s_low) - get<1>(*s_low) + 1 && cur.e > get<0>(*s_low))
         succ_len = cur.e - get<0>(*s_low) + get<2>(*s_low);
       // cout << "succ_len: " << succ_len << endl;
       get<0>(cur_tuple) = cur.e;
@@ -171,46 +178,62 @@ int liis_sub_algo(const std::deque<interval> &interval_seq) {
       }
     }
     // cout << "(" << get<0>(cur_tuple) << ", " << get<1>(cur_tuple) << ", "
-    //      << get<2>(cur_tuple) << ")" << endl;
+    // << get<2>(cur_tuple) << ")" << endl;
 
     // Domination
     auto e_low = T.upper_bound(cur_tuple);
     // cout << "e_low: [" << get<0>(*e_low) << ", " << get<1>(*e_low) << "] - "
-    //      << get<2>(*e_low) << ": " << endl;
+    // << get<2>(*e_low) << ": " << endl;
     // been dominated
     if (e_low != T.begin()) {
       if (get<2>(*prev(e_low)) >= get<2>(cur_tuple)) {
-        // cout << "been dominated" << endl;
+        // cout << "been dominated" << endl << endl;
         continue;
       }
-    } else {
+    } else if (e_low != T.end()) {
       if (get<0>(*e_low) - get<1>(*e_low) + 1 < cur.s) {
-        // cout << "been cover" << endl;
+        // cout << "been cover" << endl << endl;
         continue;
       }
     }
-    // else if (get<1>(*prev(e_low)) == get<2>(*prev(e_low))) {
-    //   // WARN : NEED FIX
-    //   if (cur.s < get<1>(*prev(e_low)) - get<2>(*prev(e_low)) + 1)
-    //     T.erase(prev(e_low));
-    // }
 
     // dominiate
     auto it = e_low;
-    while (it != T.end() && get<2>(cur_tuple) >= get<2>(*it))
+    while (it != T.end() && get<2>(cur_tuple) >= get<2>(*it)) {
+      // cout << "dominate others" << endl;
       T.erase(it++);
-    T.insert(cur_tuple);
+    }
 
+    auto cur_it = T.insert(cur_tuple).first;
+    // cout << "insert: (" << get<0>(*cur_it) << ", " << get<1>(*cur_it) << ", "
+    //      << get<2>(*cur_it) << ")" << endl;
+    if (cur_it != T.begin()) {
+      // cout << "in last" << endl;
+      it = prev(cur_it);
+      // cout << "prev insert: (" << get<0>(*it) << ", " << get<1>(*it) << ", "
+      //     << get<2>(*it) << ")" << endl;
+      // cout << "prev: " << get<0>(*it) - get<1>(*it) + 1
+      //      << ", cur: " << get<0>(cur_tuple) - get<1>(cur_tuple) + 1 << endl;
+      if (get<1>(*it) == get<2>(*it) &&
+          get<0>(cur_tuple) - get<1>(cur_tuple) + 1 <=
+              get<0>(*it) - get<1>(*it) + 1) {
+        // cout << "cover others" << endl;
+        T.erase(it);
+      }
+    }
+
+    // cout << "T2: ";
     // for (auto j : T) {
     //   cout << "(" << get<0>(j) << ", " << get<1>(j) << ", " << get<2>(j)
     //        << "), ";
     // }
-    // cout << endl;
+    // cout << endl << endl;
   }
   return get<2>(*T.rbegin());
 }
 
 bool liis_sub_check(const std::deque<interval> &interval_seq, const size_t &l) {
+  size_t max_liis = 0;
   const size_t bitset_size = 64;
   size_t case_num = pow(2, interval_seq.size());
 
@@ -220,6 +243,7 @@ bool liis_sub_check(const std::deque<interval> &interval_seq, const size_t &l) {
   for (size_t i = 1; i <= case_num; i++) {
     size_t length = 0;
     pair<int, int> prev(1, 0); // interval
+    deque<pair<int, int>> temp;
     bitset<bitset_size> mask(i);
 
     for (size_t j = 0; j < interval_seq.size(); j++) {
@@ -231,16 +255,30 @@ bool liis_sub_check(const std::deque<interval> &interval_seq, const size_t &l) {
           prev.second = cur.e;
           length = cur.l;
         } else if (cur.s > prev.first && cur.e > prev.second) {
-          length += cur.e - prev.second;
-          prev.first = cur.s;
-          prev.second = cur.e;
+          if (cur.s < prev.second) {
+            length += cur.e - prev.second;
+            prev.first = cur.s;
+            prev.second = cur.e;
+          } else if (cur.s > prev.second) {
+            length += cur.l;
+            prev.first = cur.s;
+            prev.second = cur.e;
+          }
         } else {
           break;
         }
+        temp.push_back(prev);
       }
     }
-    if (length == l)
-      return true;
+    if (length >= l) {
+      for (auto j : temp)
+        cout << "[" << j.first << ", " << j.second << "], ";
+      cout << length << endl;
+    }
+    max_liis = length > max_liis ? length : max_liis;
   }
+  cout << max_liis << endl;
+  if (max_liis == l)
+    return true;
   return false;
 }
