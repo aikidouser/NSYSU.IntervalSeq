@@ -135,6 +135,14 @@ int liis_sub_algo(const std::deque<interval> &interval_seq) {
   const interval &temp = interval_seq.at(0);
   T.emplace(temp.e, temp.l, temp.l);
   for (size_t i = 1; i < interval_seq.size(); i++) {
+
+    // cout << "T_start: ";
+    // for (auto j : T) {
+    //   cout << "(" << get<0>(j) << ", " << get<1>(j) << ", " << get<2>(j)
+    //        << "), ";
+    // }
+    // cout << endl;
+
     const interval &cur = interval_seq.at(i);
     // end, interval length, LIIS length
     tuple<int, int, int> cur_tuple(cur.s, cur.l, cur.l);
@@ -150,24 +158,28 @@ int liis_sub_algo(const std::deque<interval> &interval_seq) {
     // get<0>(cur_tuple) = cur.e;
     // Extend
     // cout << "s_low: [" << get<0>(*s_low) << ", " << get<1>(*s_low) << "] - "
-    //     << get<2>(*s_low) << ": " << endl;
+    //      << get<2>(*s_low) << ": " << endl;
     if (s_low == T.begin()) { // The first
+      // cout << "T_begin" << endl;
       get<0>(cur_tuple) = cur.e;
-      if (get<0>(cur_tuple) > get<0>(*s_low)) {
+      if (cur.s > get<0>(*s_low) - get<1>(*s_low) + 1 &&
+          get<0>(cur_tuple) > get<0>(*s_low)) {
         get<1>(cur_tuple) = get<1>(*s_low) + get<0>(cur_tuple) - get<0>(*s_low);
         get<2>(cur_tuple) = get<1>(cur_tuple);
         T.erase(s_low);
       }
     } else if (s_low == T.end()) { // Only can extend by predecessor
+      // cout << "T_end" << endl;
       get<0>(cur_tuple) = cur.e;
       get<2>(cur_tuple) += get<2>(*prev(s_low));
     } else { // Check both predecessor and successor
+      // cout << "else" << endl;
       int pred_len = cur.l + get<2>(*prev(s_low));
       // cout << "pred_len: " << pred_len << endl;
       int succ_len = 0;
       if (cur.s > get<0>(*s_low) - get<1>(*s_low) + 1 && cur.e > get<0>(*s_low))
         succ_len = cur.e - get<0>(*s_low) + get<2>(*s_low);
-      // cout << "succ_len: " << succ_len << endl;
+      //  cout << "succ_len: " << succ_len << endl;
       get<0>(cur_tuple) = cur.e;
       if (pred_len > succ_len)
         get<2>(cur_tuple) = pred_len;
@@ -178,12 +190,12 @@ int liis_sub_algo(const std::deque<interval> &interval_seq) {
       }
     }
     // cout << "(" << get<0>(cur_tuple) << ", " << get<1>(cur_tuple) << ", "
-    // << get<2>(cur_tuple) << ")" << endl;
+    //      << get<2>(cur_tuple) << ")" << endl;
 
     // Domination
     auto e_low = T.upper_bound(cur_tuple);
     // cout << "e_low: [" << get<0>(*e_low) << ", " << get<1>(*e_low) << "] - "
-    // << get<2>(*e_low) << ": " << endl;
+    //      << get<2>(*e_low) << ": " << endl;
     // been dominated
     if (e_low != T.begin()) {
       if (get<2>(*prev(e_low)) >= get<2>(cur_tuple)) {
@@ -191,7 +203,8 @@ int liis_sub_algo(const std::deque<interval> &interval_seq) {
         continue;
       }
     } else if (e_low != T.end()) {
-      if (get<0>(*e_low) - get<1>(*e_low) + 1 < cur.s) {
+      if (get<0>(*e_low) - get<1>(*e_low) + 1 <=
+          get<0>(cur_tuple) - get<1>(cur_tuple) + 1) {
         // cout << "been cover" << endl << endl;
         continue;
       }
@@ -222,7 +235,7 @@ int liis_sub_algo(const std::deque<interval> &interval_seq) {
       }
     }
 
-    // cout << "T2: ";
+    // cout << "T: ";
     // for (auto j : T) {
     //   cout << "(" << get<0>(j) << ", " << get<1>(j) << ", " << get<2>(j)
     //        << "), ";
@@ -241,6 +254,7 @@ bool liis_sub_check(const std::deque<interval> &interval_seq, const size_t &l) {
     cerr << "too long" << endl;
 
   for (size_t i = 1; i <= case_num; i++) {
+    bool if_fin = true;
     size_t length = 0;
     pair<int, int> prev(1, 0); // interval
     deque<pair<int, int>> temp;
@@ -255,9 +269,8 @@ bool liis_sub_check(const std::deque<interval> &interval_seq, const size_t &l) {
           prev.second = cur.e;
           length = cur.l;
         } else if (cur.s > prev.first && cur.e > prev.second) {
-          if (cur.s < prev.second) {
+          if (cur.s <= prev.second) {
             length += cur.e - prev.second;
-            prev.first = cur.s;
             prev.second = cur.e;
           } else if (cur.s > prev.second) {
             length += cur.l;
@@ -265,17 +278,13 @@ bool liis_sub_check(const std::deque<interval> &interval_seq, const size_t &l) {
             prev.second = cur.e;
           }
         } else {
+          if_fin = false;
           break;
         }
-        temp.push_back(prev);
       }
     }
-    if (length >= l) {
-      for (auto j : temp)
-        cout << "[" << j.first << ", " << j.second << "], ";
-      cout << length << endl;
-    }
-    max_liis = length > max_liis ? length : max_liis;
+    if (if_fin)
+      max_liis = length > max_liis ? length : max_liis;
   }
   cout << max_liis << endl;
   if (max_liis == l)
