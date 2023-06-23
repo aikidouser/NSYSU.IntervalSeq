@@ -125,6 +125,7 @@ int liis_full_algo(const std::deque<interval> &interval_seq) {
 
 bool liis_full_check(const std::deque<interval> &interval_seq,
                      const size_t &l) {
+  size_t max_liis = 0;
   const size_t bitset_size = 64;
   size_t case_num = pow(2, interval_seq.size());
 
@@ -146,9 +147,9 @@ bool liis_full_check(const std::deque<interval> &interval_seq,
         }
       }
     }
-    if (buffer.second == l) {
-      return true;
-    }
+    max_liis = buffer.second > max_liis ? buffer.second : max_liis;
   }
+  if (max_liis == l)
+    return true;
   return false;
 }
