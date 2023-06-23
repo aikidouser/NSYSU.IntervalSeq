@@ -24,10 +24,21 @@ arg_table::arg_table(int &argc, char *argv[])
   // if_opt(args, "--full");
   if (if_opt(args, "--sub")) {
     comp = "sub";
-    sub_c = stoi(get_opt(args, "--sub"));
-    if (sub_c < 0)
-      throw runtime_error(
-          "The constraint value must be greater or equal to 0.");
+
+    if (type == "most") {
+      try {
+        sub_c = stoi(get_opt(args, "--sub"));
+      } catch (invalid_argument const &e) {
+        cout << "Invalid Argument: There must be integer after --sub" << endl;
+        exit(1);
+      }
+      if (sub_c < 0) {
+        cout << "Invalid Argument: The constraint value must be greater or "
+                "equal to 0."
+             << endl;
+        exit(1);
+      }
+    }
   }
 
   if (if_opt(args, "--verbose")) {
@@ -52,9 +63,11 @@ string get_opt(const std::deque<std::string> &args, const std::string &opt) {
   for (auto it = args.begin(), end = args.end(); it != args.end(); it++) {
     if (*it == opt || *it == short_opt) {
       if (++it != end) {
+        cout << "return string" << endl;
         return *it;
       }
     }
   }
+  cout << "return empty" << endl;
   return "";
 }
