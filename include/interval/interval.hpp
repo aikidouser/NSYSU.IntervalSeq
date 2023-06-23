@@ -1,6 +1,7 @@
 #ifndef __INTERVAL_HPP__
 #define __INTERVAL_HPP__
 
+#include <iostream>
 #include <memory>
 
 // Full Interval
@@ -24,12 +25,14 @@ public:
 
   // static bool val_comp(const std::shared_ptr<interval> &x,
   //                      const std::shared_ptr<interval> &y);
+  static bool start_comp(const interval &lhs, const interval &rhs);
   static bool end_comp(const std::shared_ptr<interval> &lhs,
                        const std::shared_ptr<interval> &rhs);
 };
 
 bool operator<(const interval &lhs, const interval &rhs);
 bool operator>(const interval &lhs, const interval &rhs);
+std::ostream &operator<<(std::ostream &os, const interval &x);
 
 // bool operator<(const interval &x, const interval &y);
 // bool operator<=(const interval &x, const interval &y);

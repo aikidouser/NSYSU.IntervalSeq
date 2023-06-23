@@ -19,6 +19,14 @@ void interval::set_prev(const shared_ptr<interval> &prev) { this->prev = prev; }
 //   return x->val < y->val;
 // }
 
+bool interval::start_comp(const interval &lhs, const interval &rhs) {
+  if (lhs.s < rhs.s)
+    return true;
+  else if (lhs.s == rhs.s)
+    return lhs.e < rhs.e;
+  return false;
+}
+
 bool interval::end_comp(const shared_ptr<interval> &lhs,
                         const shared_ptr<interval> &rhs) {
   return lhs->e < rhs->e;
@@ -31,6 +39,10 @@ bool operator>(const interval &lhs, const interval &rhs) {
   return lhs.s > rhs.s && lhs.e > rhs.e && lhs.e > rhs.s;
 }
 
+std::ostream &operator<<(std::ostream &os, const interval &x) {
+  os << "[" << x.s << ", " << x.e << "]";
+  return os;
+}
 // bool operator<(const interval &x, const interval &y) {
 //   return x.s < y.s && x.e < y.e;
 // }

@@ -28,6 +28,8 @@ using std::tie;
 using std::tuple;
 using std::upper_bound;
 
+typedef set<sub, decltype(interval::start_comp) *> nondmn_set;
+
 int sub::c;
 
 int sub::get_val() const { return val; }
@@ -55,39 +57,93 @@ bool operator>(const sub &lhs, const sub &rhs) {
          lhs.e >= rhs.get_val() + sub::get_c();
 }
 
+bool box_comp(const pair<int, sub> &lhs, const pair<int, sub> &rhs) {
+  if (lhs.first < rhs.first)
+    return true;
+  else if (lhs.first > rhs.first)
+    return false;
+  else if (lhs.first == rhs.first) {
+    if (lhs.second.s < rhs.second.s) {
+      return true;
+    } else if (lhs.second.s > rhs.second.s) {
+      return false;
+    } else {
+      return lhs.second.e < rhs.second.e;
+    }
+  }
+  return false;
+}
+
 int miis_sub_algo(const deque<interval> &interval_seq) {
-  deque<shared_ptr<sub>> T;
+  deque<nondmn_set> len_boxes(1, nondmn_set(interval::start_comp));
 
-  T.emplace_back(make_shared<sub>(interval_seq.at(0),
-                                  interval_seq.at(0).s + sub::get_c() - 1));
-
+  len_boxes.at(0).emplace(interval_seq.at(0),
+                          interval_seq.at(0).s + sub::get_c() - 1);
   for (size_t i = 1; i < interval_seq.size(); i++) {
-    shared_ptr<sub> cur = make_shared<sub>(interval_seq.at(i));
-    auto up = upper_bound(T.begin(), T.end(), cur, sub::val_comp);
+    // cout << "i: " << i << interval_seq.at(i) << endl;
+    sub cur(interval_seq.at(i), interval_seq.at(i).s + sub::get_c() - 1);
+    int l = 0, r = len_boxes.size() - 1;
+    // cout << "l: " << l << ", "
+    //      << "r: " << r << endl;
 
-    for (auto t = up; t >= T.begin(); t--) {
-      if (t != T.end() && (*t)->get_val() <= cur->s + sub::get_c() - 1)
-        break;
-      if (t == T.begin()) {
-        if (cur->set_val(cur->s + sub::get_c() - 1))
-          *t = cur;
+    while (l <= r) {
+      int m = (l + r) / 2;
+      // cout << "m: " << m << endl;
+      // nondmn_set cur_box(interval::start_comp);
+      // cur_box = len_boxes.at(m);
+      auto low = len_boxes.at(m).lower_bound(cur);
+      nondmn_set::iterator in_it;
+
+      if (low == len_boxes.at(m).begin()) {
+        r = m - 1;
+        // cout << "l: " << l << ", "
+        //      << "r: " << r << endl;
       } else {
-        shared_ptr<sub> prev_t = *prev(t);
-
-        if (!(*prev_t < *cur))
-          continue;
-        if (cur->set_val(max(cur->s + sub::get_c() - 1,
-                             prev_t->get_val() + sub::get_c()))) {
-          cur->set_prev(prev_t);
-          if (t == T.end())
-            T.push_back(cur);
-          else
-            *t = cur;
+        auto pred = prev(low);
+        if (cur.s > pred->s) {
+          if (cur.e > pred->e) {
+            l = m + 1;
+          } else if (cur.e < pred->e) {
+            r = m - 1;
+          } else if (cur.e == pred->e) {
+            break;
+          }
+        } else if (cur.s == pred->s) {
+          if (cur.e > pred->e)
+            break;
         }
       }
     }
+    // cout << "after l: " << l << ", "
+    //      << "r: " << r << endl;
+    // TODO : Only need to check the interval with start larger than cur.
+    if (l >= len_boxes.size()) {
+      len_boxes.emplace_back(nondmn_set(interval::start_comp));
+      len_boxes.at(l).insert(cur);
+    } else {
+      auto in_it = len_boxes.at(l).insert(cur).first;
+      auto it = next(in_it);
+      while (it != len_boxes.at(l).end()) {
+        if (in_it->e < it->e) {
+          len_boxes.at(l).erase(it++);
+          // cout << "dominate others" << endl;
+        } else {
+          break;
+        }
+      }
+    }
+
+    // cout << "len_boxes: " << endl;
+    // int temp = 0;
+    // for (const auto &j : len_boxes) {
+    //   cout << temp++ << " ";
+    //   for (const auto &k : j)
+    //     cout << k << endl;
+    //   cout << endl;
+    // }
+    // cout << endl;
   }
-  return T.size();
+  return len_boxes.size();
 }
 
 bool miis_sub_check(const deque<interval> &interval_seq, const int &q) {
@@ -115,8 +171,7 @@ bool miis_sub_comb(const std::deque<interval> &interval_seq, const size_t &q) {
           buffer.emplace_back(sub(cur, cur.s + sub::get_c() - 1));
         } else {
           if (buffer.back() < cur)
-            buffer.emplace_back(
-                sub(cur, buffer.back().get_val() + sub::get_c()));
+            buffer.emplace_back(cur, buffer.back().get_val() + sub::get_c());
           else
             break;
         }
@@ -125,7 +180,6 @@ bool miis_sub_comb(const std::deque<interval> &interval_seq, const size_t &q) {
     if (buffer.size() == q)
       return true;
   } while (std::prev_permutation(mask.begin(), mask.end()));
-
   return false;
 }
 
