@@ -80,7 +80,7 @@ int miis_sub_algo(const deque<interval> &interval_seq) {
   len_boxes.at(0).emplace(interval_seq.at(0),
                           interval_seq.at(0).s + sub::get_c() - 1);
   for (size_t i = 1; i < interval_seq.size(); i++) {
-    // cout << "i: " << i << interval_seq.at(i) << endl;
+    // cout << "i: " << i << " " << interval_seq.at(i) << endl;
     sub cur(interval_seq.at(i), interval_seq.at(i).s + sub::get_c() - 1);
     int l = 0, r = len_boxes.size() - 1;
     // cout << "l: " << l << ", "
@@ -109,22 +109,30 @@ int miis_sub_algo(const deque<interval> &interval_seq) {
             break;
           }
         } else if (cur.s == pred->s) {
-          if (cur.e > pred->e)
+          if (cur.e > pred->e) {
+            l = -1;
             break;
+          }
         }
       }
     }
     // cout << "after l: " << l << ", "
     //      << "r: " << r << endl;
-    // TODO : Only need to check the interval with start larger than cur.
-    if (l >= len_boxes.size()) {
+    if (l == -1) {
+      continue;
+    } else if (l >= len_boxes.size()) {
       len_boxes.emplace_back(nondmn_set(interval::start_comp));
       len_boxes.at(l).insert(cur);
     } else {
       auto in_it = len_boxes.at(l).insert(cur).first;
+      if (in_it != len_boxes.at(l).begin() && prev(in_it)->e <= in_it->e) {
+        len_boxes.at(l).erase(in_it);
+        continue;
+      }
+
       auto it = next(in_it);
       while (it != len_boxes.at(l).end()) {
-        if (in_it->e < it->e) {
+        if (in_it->e <= it->e) {
           len_boxes.at(l).erase(it++);
           // cout << "dominate others" << endl;
         } else {

@@ -63,11 +63,9 @@ string get_opt(const std::deque<std::string> &args, const std::string &opt) {
   for (auto it = args.begin(), end = args.end(); it != args.end(); it++) {
     if (*it == opt || *it == short_opt) {
       if (++it != end) {
-        cout << "return string" << endl;
         return *it;
       }
     }
   }
-  cout << "return empty" << endl;
   return "";
 }
