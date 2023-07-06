@@ -26,6 +26,7 @@ public:
   // static bool val_comp(const std::shared_ptr<interval> &x,
   //                      const std::shared_ptr<interval> &y);
   static bool start_comp(const interval &lhs, const interval &rhs);
+  static bool end_comp_2(const interval &lhs, const interval &rhs);
   static bool end_comp(const std::shared_ptr<interval> &lhs,
                        const std::shared_ptr<interval> &rhs);
 };

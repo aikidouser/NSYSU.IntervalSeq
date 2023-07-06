@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <bitset>
 #include <cmath>
+#include <cstddef>
 #include <iostream>
 #include <map>
 #include <memory>
@@ -28,7 +29,7 @@ using std::tie;
 using std::tuple;
 using std::upper_bound;
 
-typedef set<sub, decltype(interval::start_comp) *> nondmn_set;
+typedef set<sub, decltype(interval::end_comp_2) *> nondmn_set;
 
 int sub::c;
 
@@ -75,12 +76,20 @@ bool box_comp(const pair<int, sub> &lhs, const pair<int, sub> &rhs) {
 }
 
 int miis_sub_algo(const deque<interval> &interval_seq) {
-  deque<nondmn_set> len_boxes(1, nondmn_set(interval::start_comp));
+  deque<nondmn_set> len_boxes(1, nondmn_set(interval::end_comp_2));
 
-  len_boxes.at(0).emplace(interval_seq.at(0),
-                          interval_seq.at(0).s + sub::get_c() - 1);
-  for (size_t i = 1; i < interval_seq.size(); i++) {
-    // cout << "i: " << i << " " << interval_seq.at(i) << endl;
+  size_t i = 0;
+  while (i < interval_seq.size() && interval_seq.at(i).l < sub::get_c()) {
+    i++;
+  }
+  if (i >= interval_seq.size())
+    return 0;
+  len_boxes.at(0).emplace(interval_seq.at(i),
+                          interval_seq.at(i).s + sub::get_c() - 1);
+  for (; i < interval_seq.size(); i++) {
+    cout << "i: " << i << " " << interval_seq.at(i) << endl;
+    if (interval_seq.at(i).l < sub::get_c())
+      continue;
     sub cur(interval_seq.at(i), interval_seq.at(i).s + sub::get_c() - 1);
     int l = 0, r = len_boxes.size() - 1;
     // cout << "l: " << l << ", "
@@ -93,26 +102,37 @@ int miis_sub_algo(const deque<interval> &interval_seq) {
       // cur_box = len_boxes.at(m);
       auto low = len_boxes.at(m).lower_bound(cur);
       nondmn_set::iterator in_it;
+      cout << "m: " << m << endl;
+      cout << *low << endl;
 
       if (low == len_boxes.at(m).begin()) {
         r = m - 1;
-        // cout << "l: " << l << ", "
-        //      << "r: " << r << endl;
+        cout << "l: " << l << ", "
+             << "r: " << r << endl;
       } else {
         auto pred = prev(low);
+        // cur.e > pre->e
         if (cur.s > pred->s) {
           if (cur.e > pred->e) {
-            l = m + 1;
-          } else if (cur.e < pred->e) {
-            r = m - 1;
+            if (*pred < cur) {
+              l = m + 1;
+            } else {
+              l = -1;
+              cout << "operator <" << endl;
+              cout << "pred: " << *pred << endl;
+              break;
+            }
+            //  } else if (cur.e < pred->e) {
+            //    r = m - 1;
           } else if (cur.e == pred->e) {
-            break;
-          }
-        } else if (cur.s == pred->s) {
-          if (cur.e > pred->e) {
             l = -1;
             break;
           }
+        } else if (cur.s < pred->s) {
+          r = m - 1;
+        } else if (cur.s == pred->s) {
+          l = -1;
+          break;
         }
       }
     }
@@ -121,7 +141,7 @@ int miis_sub_algo(const deque<interval> &interval_seq) {
     if (l == -1) {
       continue;
     } else if (l >= len_boxes.size()) {
-      len_boxes.emplace_back(nondmn_set(interval::start_comp));
+      len_boxes.emplace_back(nondmn_set(interval::end_comp_2));
       len_boxes.at(l).insert(cur);
     } else {
       auto in_it = len_boxes.at(l).insert(cur).first;
@@ -141,15 +161,15 @@ int miis_sub_algo(const deque<interval> &interval_seq) {
       }
     }
 
-    // cout << "len_boxes: " << endl;
-    // int temp = 0;
-    // for (const auto &j : len_boxes) {
-    //   cout << temp++ << " ";
-    //   for (const auto &k : j)
-    //     cout << k << endl;
-    //   cout << endl;
-    // }
-    // cout << endl;
+    cout << "len_boxes: " << endl;
+    int temp = 0;
+    for (const auto &j : len_boxes) {
+      cout << temp++ << " ";
+      for (const auto &k : j)
+        cout << k << ", ";
+      cout << endl;
+    }
+    cout << endl;
   }
   return len_boxes.size();
 }
@@ -160,10 +180,16 @@ bool miis_sub_check(const deque<interval> &interval_seq, const int &q) {
   check_a = miis_sub_comb(interval_seq, q);
   check_b = miis_sub_comb(interval_seq, q + 1);
 
+  if (check_a == false)
+    cout << "not so longer" << endl;
+  if (check_b == true)
+    cout << "can be longer" << endl;
+
   return check_a == true && check_b == false;
 }
 
 bool miis_sub_comb(const std::deque<interval> &interval_seq, const size_t &q) {
+  bool flag = false;
   int n = interval_seq.size();
   deque<sub> buffer;
   deque<bool> mask(q, true);
@@ -174,21 +200,28 @@ bool miis_sub_comb(const std::deque<interval> &interval_seq, const size_t &q) {
     for (int i = 0; i < n; i++) {
       if (mask[i]) {
         sub cur = interval_seq.at(i);
+        if (cur.l < sub::get_c())
+          break;
 
         if (buffer.empty()) {
           buffer.emplace_back(sub(cur, cur.s + sub::get_c() - 1));
         } else {
           if (buffer.back() < cur)
-            buffer.emplace_back(cur, buffer.back().get_val() + sub::get_c());
+            buffer.emplace_back(cur, cur.s + sub::get_c() - 1);
           else
             break;
         }
       }
     }
-    if (buffer.size() == q)
-      return true;
+
+    if (buffer.size() == q) {
+      for (const auto &i : buffer)
+        cout << i << " ";
+      cout << endl;
+      flag = true;
+    }
   } while (std::prev_permutation(mask.begin(), mask.end()));
-  return false;
+  return flag;
 }
 
 int liis_sub_algo(const std::deque<interval> &interval_seq) {
