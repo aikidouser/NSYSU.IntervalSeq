@@ -13,7 +13,7 @@ private:
 
 public:
   sub(int start, int end) : interval(start, end) {}
-  sub(const interval &x) : interval(x), val(x.e) {}
+  sub(const interval &x) : interval(x), val(x.e()) {}
   sub(const interval &x, const int &v) : interval(x), val(v) {}
   ~sub() {}
 

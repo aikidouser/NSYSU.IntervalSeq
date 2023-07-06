@@ -3,17 +3,18 @@
 #include <cmath>
 #include <deque>
 #include <iostream>
+#include <iterator>
 #include <map>
 #include <memory>
 #include <set>
 
 #include <interval/full.hpp>
+#include <interval/interval.hpp>
 
 using std::bitset;
 using std::deque;
 using std::pair;
 using std::set;
-using std::shared_ptr;
 
 using std::cerr;
 using std::cout;
@@ -28,23 +29,22 @@ using std::upper_bound;
 
 // TODO : use list to trace
 int miis_full_algo(const deque<interval> &interval_seq) {
-  deque<shared_ptr<interval>> T;
+  deque<interval> T;
 
-  T.emplace_back(make_shared<interval>(interval_seq.at(0)));
+  T.push_back(interval_seq.at(0));
   for (size_t i = 1; i < interval_seq.size(); i++) {
-    shared_ptr<interval> cur_interval =
-        make_shared<interval>(interval_seq.at(i));
+    interval cur_interval = interval_seq.at(i);
     auto it = upper_bound(T.begin(), T.end(), cur_interval, interval::end_comp);
 
     if (it == T.begin()) {
       *it = cur_interval;
-    } else if (cur_interval->s > (*prev(it))->e) {
+    } else if (cur_interval.s() > (*prev(it)).e()) {
       if (it == T.end()) {
         T.push_back(cur_interval);
       } else {
         *it = cur_interval;
       }
-      cur_interval->set_prev(*prev(it));
+      // it->set_prev(make_shared<interval>(*prev(it)));
     }
   }
   return T.size();
@@ -94,18 +94,18 @@ int liis_full_algo(const std::deque<interval> &interval_seq) {
   deque<int> trace(interval_seq.size(), -1);
   set<pair<int, int>> T;
 
-  T.emplace(make_pair(interval_seq.at(0).e, interval_seq.at(0).l));
+  T.emplace(make_pair(interval_seq.at(0).e(), interval_seq.at(0).l()));
   for (size_t i = 0; i < interval_seq.size(); i++) {
     const interval &cur = interval_seq.at(i);
-    pair<int, int> cur_pair(cur.s, cur.l);
+    pair<int, int> cur_pair(cur.s(), cur.l());
     auto s_low = lower_bound(T.begin(), T.end(), cur_pair);
 
     // cout << "[" << cur.s << ", " << cur.e << "] - " << cur.l << " : ";
 
     if (s_low == T.begin()) {
-      cur_pair.first = cur.e;
+      cur_pair.first = cur.e();
     } else {
-      cur_pair.first = cur.e;
+      cur_pair.first = cur.e();
       cur_pair.second += prev(s_low)->second;
     }
 
@@ -139,9 +139,9 @@ bool liis_full_check(const std::deque<interval> &interval_seq,
     for (size_t j = 0; j < interval_seq.size(); j++) {
       if (mask.test(j)) {
         interval cur = interval_seq.at(j);
-        if (cur.s > buffer.first) {
-          buffer.first = cur.e;
-          buffer.second += cur.l;
+        if (cur.s() > buffer.first) {
+          buffer.first = cur.e();
+          buffer.second += cur.l();
         } else {
           break;
         }

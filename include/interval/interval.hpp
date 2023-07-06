@@ -8,17 +8,23 @@
 class interval {
 private:
   // int val;
+  int _s;
+  int _e;
+  int _l;
   std::shared_ptr<interval> prev;
 
 public:
-  const int s;
-  const int e;
-  const int l;
+  // const int s;
+  // const int e;
+  // const int l;
 
   interval(int start, int end);
   ~interval() {}
 
   // int get_val() const;
+  int s() const;
+  int e() const;
+  int l() const;
 
   // bool set_val(int v);
   void set_prev(const std::shared_ptr<interval> &prev);
