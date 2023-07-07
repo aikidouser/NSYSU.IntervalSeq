@@ -1,6 +1,7 @@
 #ifndef __INTERVAL_HPP__
 #define __INTERVAL_HPP__
 
+#include <deque>
 #include <iostream>
 #include <memory>
 
@@ -11,13 +12,14 @@ private:
   int _s;
   int _e;
   int _l;
-  std::shared_ptr<interval> prev;
+  std::shared_ptr<interval> _prev;
 
 public:
   // const int s;
   // const int e;
   // const int l;
 
+  interval();
   interval(int start, int end);
   ~interval() {}
 
@@ -25,6 +27,7 @@ public:
   int s() const;
   int e() const;
   int l() const;
+  std::shared_ptr<interval> prev();
 
   // bool set_val(int v);
   void set_prev(const std::shared_ptr<interval> &prev);
@@ -34,6 +37,8 @@ public:
   static bool start_comp(const interval &lhs, const interval &rhs);
   static bool end_comp(const interval &lhs, const interval &rhs);
 };
+
+std::deque<interval> trace(const interval &last);
 
 bool operator<(const interval &lhs, const interval &rhs);
 bool operator>(const interval &lhs, const interval &rhs);

@@ -22,12 +22,13 @@ int main(int argc, char *argv[]) {
   size_t q = 0;
   arg_table arg_t(argc, argv);
   deque<interval> interval_seq;
+  deque<interval> subseq;
 
   interval_seq = get_input();
   if (arg_t.type == "most") {
     cout << "MIIS - ";
     if (arg_t.comp == "full") {
-      q = miis_full_algo(interval_seq);
+      q = miis_full_algo(interval_seq, subseq);
       cout << "full: " << q << endl;
       if (miis_full_check(interval_seq, q))
         cout << "CORRECT" << endl;
@@ -60,6 +61,10 @@ int main(int argc, char *argv[]) {
         cout << "ERROR" << endl;
     }
   }
+  cout << "subsequence: ";
+  for (const auto &i : subseq)
+    cout << i << ", ";
+  cout << endl;
 
   return 0;
 }

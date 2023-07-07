@@ -28,7 +28,8 @@ using std::prev;
 using std::upper_bound;
 
 // TODO : use list to trace
-int miis_full_algo(const deque<interval> &interval_seq) {
+int miis_full_algo(const deque<interval> &interval_seq,
+                   deque<interval> &subseq) {
   deque<interval> T;
 
   T.push_back(interval_seq.at(0));
@@ -44,9 +45,10 @@ int miis_full_algo(const deque<interval> &interval_seq) {
       } else {
         *it = cur_interval;
       }
-      // it->set_prev(make_shared<interval>(*prev(it)));
+      it->set_prev(make_shared<interval>(*prev(it)));
     }
   }
+  subseq = trace(T.back());
   return T.size();
 }
 

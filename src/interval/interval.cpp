@@ -1,11 +1,16 @@
 #include <algorithm>
+#include <deque>
 #include <stdexcept>
 
 #include <interval/interval.hpp>
 
+using std::deque;
 using std::shared_ptr;
 
-interval::interval(int start, int end) : _s(start), _e(end), _l(_e - _s + 1) {
+interval::interval() {}
+
+interval::interval(int start, int end)
+    : _s(start), _e(end), _l(_e - _s + 1), _prev(nullptr) {
   if (_l < 1) {
     throw std::invalid_argument(
         "The start of the interval is bigger than the end.");
@@ -15,8 +20,11 @@ interval::interval(int start, int end) : _s(start), _e(end), _l(_e - _s + 1) {
 int interval::s() const { return _s; }
 int interval::e() const { return _e; }
 int interval::l() const { return _l; }
+std::shared_ptr<interval> interval::prev() { return _prev; }
 
-void interval::set_prev(const shared_ptr<interval> &prev) { this->prev = prev; }
+void interval::set_prev(const shared_ptr<interval> &prev) {
+  this->_prev = prev;
+}
 
 // bool interval::val_comp(const shared_ptr<interval> &x,
 //                         const shared_ptr<interval> &y) {
@@ -36,6 +44,17 @@ bool interval::end_comp(const interval &lhs, const interval &rhs) {
   else if (lhs.e() == rhs.e())
     return lhs.s() < rhs.s();
   return false;
+}
+
+deque<interval> trace(const interval &last) {
+  interval cur = last;
+  deque<interval> ans{last};
+
+  while (cur.prev() != nullptr) {
+    cur = *cur.prev();
+    ans.push_front(cur);
+  }
+  return ans;
 }
 
 bool operator<(const interval &lhs, const interval &rhs) {
