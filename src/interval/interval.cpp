@@ -30,16 +30,12 @@ bool interval::start_comp(const interval &lhs, const interval &rhs) {
     return lhs.e() < rhs.e();
   return false;
 }
-bool interval::end_comp_2(const interval &lhs, const interval &rhs) {
+bool interval::end_comp(const interval &lhs, const interval &rhs) {
   if (lhs.e() < rhs.e())
     return true;
   else if (lhs.e() == rhs.e())
     return lhs.s() < rhs.s();
   return false;
-}
-bool interval::end_comp(const shared_ptr<interval> &lhs,
-                        const shared_ptr<interval> &rhs) {
-  return lhs->e() < rhs->e();
 }
 
 bool operator<(const interval &lhs, const interval &rhs) {
