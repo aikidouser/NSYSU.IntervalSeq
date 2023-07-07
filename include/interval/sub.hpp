@@ -30,7 +30,8 @@ public:
 bool operator<(const sub &lhs, const sub &rhs);
 bool operator>(const sub &lhe, const sub &rhs);
 
-int miis_sub_algo(const std::deque<interval> &interval_seq);
+int miis_sub_algo(const std::deque<interval> &interval_seq,
+                  std::deque<interval> &subseq);
 bool miis_sub_check(const std::deque<interval> &interval_seq, const int &q);
 bool miis_sub_comb(const std::deque<interval> &interval_seq, const size_t &q);
 

@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
         cout << "ERROR" << endl;
     } else if (arg_t.comp == "sub") {
       sub::set_c(arg_t.sub_c);
-      q = miis_sub_algo(interval_seq);
+      q = miis_sub_algo(interval_seq, subseq);
       cout << "sub: " << q << endl;
       if (miis_sub_check(interval_seq, q))
         cout << "CORRECT" << endl;

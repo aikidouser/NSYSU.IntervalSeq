@@ -1,7 +1,9 @@
+#include "interval/interval.hpp"
 #include <algorithm>
 #include <bitset>
 #include <cmath>
 #include <cstddef>
+#include <deque>
 #include <iostream>
 #include <map>
 #include <memory>
@@ -75,7 +77,8 @@ bool box_comp(const pair<int, sub> &lhs, const pair<int, sub> &rhs) {
   return false;
 }
 
-int miis_sub_algo(const deque<interval> &interval_seq) {
+int miis_sub_algo(const deque<interval> &interval_seq,
+                  deque<interval> &subseq) {
   deque<nondmn_set> len_boxes(1, nondmn_set(interval::end_comp));
 
   size_t i = 0;
@@ -112,6 +115,7 @@ int miis_sub_algo(const deque<interval> &interval_seq) {
           if (cur.e() > pred->e()) {
             if (*pred < cur) {
               l = m + 1;
+              cur.set_prev(make_shared<interval>(*pred));
             } else {
               l = -1;
               break;
@@ -164,6 +168,7 @@ int miis_sub_algo(const deque<interval> &interval_seq) {
     // }
     // cout << endl;
   }
+  subseq = trace(*len_boxes.back().rbegin());
   return len_boxes.size();
 }
 
