@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
       else
         cout << "ERROR" << endl;
     } else if (arg_t.comp == "sub") {
-      l = liis_sub_algo(interval_seq);
+      l = liis_sub_algo(interval_seq, subseq);
       cout << "sub: " << l << endl;
       if (liis_sub_check(interval_seq, l))
         cout << "CORRECT" << endl;
