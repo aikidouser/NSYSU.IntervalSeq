@@ -7,14 +7,18 @@
 #include <map>
 #include <memory>
 #include <set>
+#include <unordered_map>
 
 #include <interval/full.hpp>
 #include <interval/interval.hpp>
+#include <utility>
 
 using std::bitset;
 using std::deque;
+using std::map;
 using std::pair;
 using std::set;
+using std::vector;
 
 using std::cerr;
 using std::cout;
@@ -92,11 +96,16 @@ bool miis_full_comb(const std::deque<interval> &interval_seq, const size_t &q) {
   return check;
 }
 
-int liis_full_algo(const std::deque<interval> &interval_seq) {
-  deque<int> trace(interval_seq.size(), -1);
+int liis_full_algo(const std::deque<interval> &interval_seq,
+                   deque<interval> &subseq) {
   set<pair<int, int>> T;
 
-  T.emplace(make_pair(interval_seq.at(0).e(), interval_seq.at(0).l()));
+  vector<int> prev_table(interval_seq.size(), -1);
+  map<pair<int, int>, int> index_table;
+
+  T.emplace(interval_seq.at(0).e(), interval_seq.at(0).l());
+  index_table.emplace(make_pair(interval_seq.at(0).e(), interval_seq.at(0).l()),
+                      0);
   for (size_t i = 0; i < interval_seq.size(); i++) {
     const interval &cur = interval_seq.at(i);
     pair<int, int> cur_pair(cur.s(), cur.l());
@@ -109,6 +118,8 @@ int liis_full_algo(const std::deque<interval> &interval_seq) {
     } else {
       cur_pair.first = cur.e();
       cur_pair.second += prev(s_low)->second;
+
+      prev_table.at(i) = index_table[*prev(s_low)];
     }
 
     auto e_low = upper_bound(T.begin(), T.end(), cur_pair);
@@ -121,6 +132,14 @@ int liis_full_algo(const std::deque<interval> &interval_seq) {
       T.erase(it++);
     }
     T.insert(cur_pair);
+    index_table.emplace(cur_pair, i);
+  }
+
+  int index = index_table.at(*T.rbegin());
+  while (index >= 0) {
+    // cout << "index: " << index << endl;
+    subseq.push_front(interval_seq.at(index));
+    index = prev_table.at(index);
   }
   return T.rbegin()->second;
 }

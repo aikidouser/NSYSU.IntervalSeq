@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
   } else if (arg_t.type == "longest") {
     cout << "LIIS - ";
     if (arg_t.comp == "full") {
-      l = liis_full_algo(interval_seq);
+      l = liis_full_algo(interval_seq, subseq);
       cout << "full: " << l << endl;
       if (liis_full_check(interval_seq, l))
         cout << "CORRECT" << endl;
