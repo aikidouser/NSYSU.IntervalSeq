@@ -87,13 +87,15 @@ if __name__ == "__main__":
     # c_list = ['#FE7A7B', '#FF9966', '#FFCC66', '#99D8B9', '#66CCCC']  #色票
     # labels = ['X1', 'X2', 'X3', 'X4', 'X5']
 
+    plt.figure(figsize=(20,10))
     plt.ylim(420, 600)
     plt.ylabel('The lowet and highest stock price', fontweight='bold', fontsize=15)
     plt.xlabel('Date', fontweight='bold', fontsize=15)
     plt.xticks(index, date, rotation='vertical', fontsize=8)
-    plt.margins(0)
-    f = plt.bar(index, length, bottom=start, color=color_list, 
+    plt.bar(index, length, bottom=start, color=color_list, 
                 width=1.0, edgecolor='black', linewidth = 1)
-    # createLabels(f)
+    plt.subplots_adjust(top=0.99, bottom=0.1, right=0.995, left=0.04)
+    plt.margins(0, 0)
+    plt.savefig('test.svg')
 
     plt.show()
