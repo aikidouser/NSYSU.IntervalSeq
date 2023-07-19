@@ -12,6 +12,7 @@ private:
   int _s;
   int _e;
   int _l;
+  size_t _idx;
   std::shared_ptr<interval> _prev;
 
 public:
@@ -20,13 +21,14 @@ public:
   // const int l;
 
   interval();
-  interval(int start, int end);
+  interval(int start, int end, size_t idx);
   ~interval() {}
 
   // int get_val() const;
   int s() const;
   int e() const;
   int l() const;
+  size_t idx() const;
   std::shared_ptr<interval> prev();
 
   // bool set_val(int v);

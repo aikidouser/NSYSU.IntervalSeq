@@ -9,8 +9,8 @@ using std::shared_ptr;
 
 interval::interval() {}
 
-interval::interval(int start, int end)
-    : _s(start), _e(end), _l(_e - _s + 1), _prev(nullptr) {
+interval::interval(int start, int end, size_t idx)
+    : _s(start), _e(end), _l(_e - _s + 1), _idx(idx), _prev(nullptr) {
   if (_l < 1) {
     throw std::invalid_argument(
         "The start of the interval is bigger than the end.");
@@ -20,6 +20,7 @@ interval::interval(int start, int end)
 int interval::s() const { return _s; }
 int interval::e() const { return _e; }
 int interval::l() const { return _l; }
+size_t interval::idx() const { return _idx; }
 std::shared_ptr<interval> interval::prev() { return _prev; }
 
 void interval::set_prev(const shared_ptr<interval> &prev) {

@@ -12,7 +12,7 @@ private:
   static int c;
 
 public:
-  sub(int start, int end) : interval(start, end) {}
+  sub(int start, int end, size_t idx) : interval(start, end, idx) {}
   sub(const interval &x) : interval(x), val(x.e()) {}
   sub(const interval &x, const int &v) : interval(x), val(v) {}
   ~sub() {}

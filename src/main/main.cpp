@@ -65,16 +65,20 @@ int main(int argc, char *argv[]) {
   for (const auto &i : subseq)
     cout << i << ", ";
   cout << endl;
+  cout << "index: ";
+  for (const auto &i : subseq)
+    cout << i.idx() << ", ";
+  cout << endl;
 
   return 0;
 }
 
 deque<interval> get_input() {
   deque<interval> input;
-  int start = 0, end = 0;
+  int start = 0, end = 0, index = 0;
 
   while (cin >> start >> end)
-    input.emplace_back(interval(start, end));
+    input.emplace_back(interval(start, end, index++));
 
   return input;
 }
