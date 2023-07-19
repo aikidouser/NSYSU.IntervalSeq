@@ -30,35 +30,47 @@ int main(int argc, char *argv[]) {
     if (arg_t.comp == "full") {
       q = miis_full_algo(interval_seq, subseq);
       cout << "full: " << q << endl;
-      if (miis_full_check(interval_seq, q))
-        cout << "CORRECT" << endl;
-      else
-        cout << "ERROR" << endl;
+
+      if (arg_t.check) {
+        if (miis_full_check(interval_seq, q))
+          cout << "CORRECT" << endl;
+        else
+          cout << "ERROR" << endl;
+      }
     } else if (arg_t.comp == "sub") {
       sub::set_c(arg_t.sub_c);
       q = miis_sub_algo(interval_seq, subseq);
       cout << "sub: " << q << endl;
-      if (miis_sub_check(interval_seq, q))
-        cout << "CORRECT" << endl;
-      else
-        cout << "ERROR" << endl;
+
+      if (arg_t.check) {
+        if (miis_sub_check(interval_seq, q))
+          cout << "CORRECT" << endl;
+        else
+          cout << "ERROR" << endl;
+      }
     }
   } else if (arg_t.type == "longest") {
     cout << "LIIS - ";
     if (arg_t.comp == "full") {
       l = liis_full_algo(interval_seq, subseq);
       cout << "full: " << l << endl;
-      if (liis_full_check(interval_seq, l))
-        cout << "CORRECT" << endl;
-      else
-        cout << "ERROR" << endl;
+
+      if (arg_t.check) {
+        if (liis_full_check(interval_seq, l))
+          cout << "CORRECT" << endl;
+        else
+          cout << "ERROR" << endl;
+      }
     } else if (arg_t.comp == "sub") {
       l = liis_sub_algo(interval_seq, subseq);
       cout << "sub: " << l << endl;
-      if (liis_sub_check(interval_seq, l))
-        cout << "CORRECT" << endl;
-      else
-        cout << "ERROR" << endl;
+
+      if (arg_t.check) {
+        if (liis_sub_check(interval_seq, l))
+          cout << "CORRECT" << endl;
+        else
+          cout << "ERROR" << endl;
+      }
     }
   }
   cout << "subsequence: ";

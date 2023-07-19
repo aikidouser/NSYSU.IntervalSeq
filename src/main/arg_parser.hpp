@@ -9,6 +9,7 @@ struct arg_table {
   std::string comp;
   int sub_c;
   bool verb;
+  bool check;
 
   arg_table(int &argc, char *argv[]);
 };

@@ -11,7 +11,7 @@ using namespace std;
 const string msg_warning = "[WARNING]: ";
 
 arg_table::arg_table(int &argc, char *argv[])
-    : type("most"), comp("full"), sub_c(0), verb(false) {
+    : type("most"), comp("full"), sub_c(0), verb(false), check(false) {
 
   if (argc > 64)
     throw runtime_error("There are too many arguments.");
@@ -43,6 +43,9 @@ arg_table::arg_table(int &argc, char *argv[])
 
   if (if_opt(args, "--verbose")) {
     verb = true;
+  }
+  if (if_opt(args, "--check")) {
+    check = true;
   }
 }
 
