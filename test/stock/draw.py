@@ -80,12 +80,12 @@ if __name__ == "__main__":
     plt.figure(figsize=(20,10))
     # plt.ylim(420, 600)
     plt.ylim(440, 690)
-    plt.ylabel('The lowet and highest stock price', fontweight='bold', fontsize=15)
-    plt.xlabel('Date', fontweight='bold', fontsize=15)
-    plt.xticks(index, date, rotation='vertical', fontsize=8)
+    plt.ylabel('The lowet and highest stock price', fontweight='bold', fontsize=30)
+    plt.xlabel('Date', fontweight='bold', fontsize=30)
+    plt.xticks(index, date, rotation='vertical', fontsize=13)
     plt.bar(index, length, bottom=start, color=color_list, 
                 width=1.0, edgecolor='black', linewidth = 1)
-    plt.subplots_adjust(top=0.99, bottom=0.1, right=0.995, left=0.04)
+    plt.subplots_adjust(top=0.99, bottom=0.15, right=0.995, left=0.05)
     plt.margins(0, 0)
     plt.savefig(sys.argv[2] + '_' + sys.argv[3] + '.eps')
 
