@@ -87,6 +87,6 @@ if __name__ == "__main__":
                 width=1.0, edgecolor='black', linewidth = 1)
     plt.subplots_adjust(top=0.99, bottom=0.1, right=0.995, left=0.04)
     plt.margins(0, 0)
-    plt.savefig(sys.argv[2] + '_' + sys.argv[3] + '.svg')
+    plt.savefig(sys.argv[2] + '_' + sys.argv[3] + '.eps')
 
     plt.show()
