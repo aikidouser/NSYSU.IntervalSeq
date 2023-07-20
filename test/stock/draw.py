@@ -78,7 +78,8 @@ if __name__ == "__main__":
     # labels = ['X1', 'X2', 'X3', 'X4', 'X5']
 
     plt.figure(figsize=(20,10))
-    plt.ylim(420, 600)
+    # plt.ylim(420, 600)
+    plt.ylim(440, 690)
     plt.ylabel('The lowet and highest stock price', fontweight='bold', fontsize=15)
     plt.xlabel('Date', fontweight='bold', fontsize=15)
     plt.xticks(index, date, rotation='vertical', fontsize=8)
