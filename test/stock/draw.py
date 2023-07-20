@@ -62,6 +62,17 @@ if __name__ == "__main__":
     with open(path + "date.txt", "r") as f: # date
         date = [i.rstrip() for i in f]
 
+    for i in range(len(date) - 1, -1,-1):
+        if(i - 1 != -1):
+            if date[i][5] == date[i-1][5]:
+                date[i] = '';
+        if(date[i] != ''):
+            temp = date[i].split('/')
+
+            year = str(int(temp[0]) + 1911)
+            month = temp[1]
+            date[i] = str(int(temp[0]) + 1911) + "/" + temp[1]
+
     subseq = list()
     with open(path + sys.argv[3] + ".txt", "r") as f: # index of the subsequence
         temp = f.readline()
@@ -82,11 +93,11 @@ if __name__ == "__main__":
     plt.ylim(440, 690)
     plt.ylabel('The lowet and highest stock price', fontweight='bold', fontsize=30)
     plt.xlabel('Date', fontweight='bold', fontsize=30)
-    plt.xticks(index, date, rotation='vertical', fontsize=13)
+    plt.yticks(fontsize=23)
+    plt.xticks(index, date, fontsize=23, ha='left')
     plt.bar(index, length, bottom=start, color=color_list, 
                 width=1.0, edgecolor='black', linewidth = 1)
-    plt.subplots_adjust(top=0.99, bottom=0.15, right=0.995, left=0.05)
+    plt.subplots_adjust(top=0.99, bottom=0.10, right=0.995, left=0.07)
     plt.margins(0, 0)
     plt.savefig(sys.argv[2] + '_' + sys.argv[3] + '.eps')
 
-    plt.show()
