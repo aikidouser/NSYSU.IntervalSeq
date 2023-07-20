@@ -33,17 +33,20 @@ def createLabels(data):
             va="bottom",
         )
 
-
+# 20231_date.txt 20231_miis_full.txt  20231.txt
 if __name__ == "__main__":
-    if len(sys.argv) > 0:
-        print(sys.argv[1])
-        print(sys.argv[2])
+    if len(sys.argv) == 4:
+        print(sys.argv[1]) # stock
+        print(sys.argv[2]) # years
+        print(sys.argv[3]) # algorithm
     else:
         print("need input file")
         exit()
 
+    path = sys.argv[1] + "/" + sys.argv[2] + "/"
+
     interval_seq = list()
-    with open(sys.argv[1], "r") as f:
+    with open(path + "seq.txt", "r") as f: # highest and lowet stock price
         for line in f:
             temp_s, temp_e = line.split()
             temp_s = int(temp_s)
@@ -55,27 +58,14 @@ if __name__ == "__main__":
     end = [i.e() for i in interval_seq]
     length = [i.l() for i in interval_seq]
 
-    print(len(start))
-    # print(start)
-    # start = np.array([10, 30, 50, 20, 33])
-    # end = np.array([31, 61, 95, 55, 110])
-    # 計算長度
-    # h = list()
-    # for i in range(len(start)):
-    #     h.append(end[i]-start[i] - 1)
-    # height = np.array(h)
+    date = list()
+    with open(path + "date.txt", "r") as f: # date
+        date = [i.rstrip() for i in f]
 
     subseq = list()
-    with open(sys.argv[2], "r") as f:
+    with open(path + sys.argv[3] + ".txt", "r") as f: # index of the subsequence
         temp = f.readline()
         subseq = [int(i) + 1 for i in filter(None, temp.rstrip('\n').split(', '))]
-    print(subseq)
-
-    date = list()
-    with open(sys.argv[3], "r") as f:
-        date = [i.rstrip() for i in f]
-    # print(date)
-
 
     color_list = list()
     for i in range(1, len(index)+1):
@@ -96,6 +86,6 @@ if __name__ == "__main__":
                 width=1.0, edgecolor='black', linewidth = 1)
     plt.subplots_adjust(top=0.99, bottom=0.1, right=0.995, left=0.04)
     plt.margins(0, 0)
-    plt.savefig('test.svg')
+    plt.savefig(sys.argv[2] + '_' + sys.argv[3] + '.svg')
 
     plt.show()
