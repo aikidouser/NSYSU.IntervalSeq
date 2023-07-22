@@ -243,7 +243,7 @@ int liis_sub_algo(const std::deque<interval> &interval_seq,
     // end, interval length, LIIS length
     tuple<int, int, int> cur_tuple(cur.s(), cur.l(), cur.l());
 
-    // cout << "[" << cur.s << ", " << cur.e << "] - " << cur.l << ": " << endl;
+    // cout << cur << ": " << cur.l() << endl;
 
     if (T.empty()) {
       T.emplace(cur.e(), cur.l(), cur.l());
@@ -276,10 +276,12 @@ int liis_sub_algo(const std::deque<interval> &interval_seq,
       // cout << "else" << endl;
       int pred_len = cur.l() + get<2>(*prev(s_low));
       // cout << "pred_len: " << pred_len << endl;
-      int succ_len = 0;
+      int succ_len = 0, inc_len = 0;
       if (cur.s() > get<0>(*s_low) - get<1>(*s_low) + 1 &&
-          cur.e() > get<0>(*s_low))
+          cur.e() > get<0>(*s_low)) {
+        inc_len = cur.e() - get<0>(*s_low);
         succ_len = cur.e() - get<0>(*s_low) + get<2>(*s_low);
+      }
       //  cout << "succ_len: " << succ_len << endl;
       get<0>(cur_tuple) = cur.e();
       if (pred_len > succ_len) {
@@ -287,7 +289,7 @@ int liis_sub_algo(const std::deque<interval> &interval_seq,
 
         prev_table.at(i) = index_table.at(*prev(s_low));
       } else {
-        get<1>(cur_tuple) = succ_len;
+        get<1>(cur_tuple) += inc_len;
         get<2>(cur_tuple) = succ_len;
 
         prev_table.at(i) = index_table.at(*s_low);
