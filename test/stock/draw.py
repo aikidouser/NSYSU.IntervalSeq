@@ -79,11 +79,14 @@ if __name__ == "__main__":
         subseq = [int(i) + 1 for i in filter(None, temp.rstrip('\n').split(', '))]
 
     color_list = list()
+    hatch_list = list()
     for i in range(1, len(index)+1):
         if i in subseq:
             color_list.append('#FE7A7B')
+            hatch_list.append('///')
         else:
             color_list.append('#66CCCC')
+            hatch_list.append('')
 
     # c_list = ['#FE7A7B', '#FF9966', '#FFCC66', '#99D8B9', '#66CCCC']  #色票
     # labels = ['X1', 'X2', 'X3', 'X4', 'X5']
@@ -95,7 +98,7 @@ if __name__ == "__main__":
     plt.xlabel('Date', fontweight='bold', fontsize=30)
     plt.yticks(fontsize=23)
     plt.xticks(index, date, fontsize=23, ha='left')
-    plt.bar(index, length, bottom=start, color=color_list, 
+    plt.bar(index, length, bottom=start, color=color_list, hatch=hatch_list, 
                 width=1.0, edgecolor='black', linewidth = 1)
     plt.subplots_adjust(top=0.99, bottom=0.10, right=0.995, left=0.07)
     plt.margins(0, 0)
