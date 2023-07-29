@@ -46,6 +46,13 @@ bool interval::end_comp(const interval &lhs, const interval &rhs) {
     return lhs.s() < rhs.s();
   return false;
 }
+bool interval::start_comp_d(const interval &lhs, const interval &rhs) {
+  if (lhs.s() > rhs.s())
+    return true;
+  else if (lhs.s() == rhs.s())
+    return lhs.e() > rhs.e();
+  return false;
+}
 
 deque<interval> trace(const interval &last) {
   interval cur = last;

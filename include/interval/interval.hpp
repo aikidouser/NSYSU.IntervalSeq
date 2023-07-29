@@ -38,6 +38,7 @@ public:
   //                      const std::shared_ptr<interval> &y);
   static bool start_comp(const interval &lhs, const interval &rhs);
   static bool end_comp(const interval &lhs, const interval &rhs);
+  static bool start_comp_d(const interval &lhs, const interval &rhs);
 };
 
 std::deque<interval> trace(const interval &last);
