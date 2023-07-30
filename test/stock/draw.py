@@ -1,3 +1,4 @@
+import re
 import sys
 import matplotlib.pyplot as plt
 
@@ -75,8 +76,11 @@ if __name__ == "__main__":
 
     subseq = list()
     with open(path + sys.argv[3] + ".txt", "r") as f: # index of the subsequence
-        temp = f.readline()
-        subseq = [int(i) + 1 for i in filter(None, temp.rstrip('\n').split(', '))]
+        # temp = f.readline()
+        # subseq = [int(i) + 1 for i in filter(None, temp.rstrip('\n').split(', '))]
+        for line in f:
+            if(line.split(": ")[0] == "index"):
+                subseq = [int(i) + 1 for i in filter(None, re.split(": |, |\n", line)[1 : -1])]
 
     color_list = list()
     hatch_list = list()
