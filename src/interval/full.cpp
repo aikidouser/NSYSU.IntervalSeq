@@ -56,6 +56,31 @@ int miis_full_algo(const deque<interval> &interval_seq,
   return T.size();
 }
 
+int miis_full_algo_d(const deque<interval> &interval_seq,
+                     deque<interval> &subseq) {
+  deque<interval> T;
+
+  T.push_back(interval_seq.at(0));
+  for (size_t i = 1; i < interval_seq.size(); i++) {
+    interval cur_interval = interval_seq.at(i);
+    auto it =
+        upper_bound(T.begin(), T.end(), cur_interval, interval::start_comp_d);
+
+    if (it == T.begin()) {
+      *it = cur_interval;
+    } else if (cur_interval.e() < (*prev(it)).s()) {
+      if (it == T.end()) {
+        T.push_back(cur_interval);
+      } else {
+        *it = cur_interval;
+      }
+      it->set_prev(make_shared<interval>(*prev(it)));
+    }
+  }
+  subseq = trace(T.back());
+  return T.size();
+}
+
 bool miis_full_check(const deque<interval> &interval_seq, const size_t &q) {
   bool check_a = false, check_b = false;
 

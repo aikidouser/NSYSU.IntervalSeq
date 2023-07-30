@@ -28,7 +28,8 @@ int main(int argc, char *argv[]) {
   if (arg_t.type == "most") {
     cout << "MIIS - ";
     if (arg_t.comp == "full") {
-      q = miis_full_algo(interval_seq, subseq);
+      // q = miis_full_algo(interval_seq, subseq);
+      q = miis_full_algo_d(interval_seq, subseq);
       cout << "full: " << q << endl;
 
       if (arg_t.check) {

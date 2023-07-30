@@ -8,6 +8,8 @@
 
 int miis_full_algo(const std::deque<interval> &interval_seq,
                    std::deque<interval> &subseq);
+int miis_full_algo_d(const std::deque<interval> &interval_seq,
+                     std::deque<interval> &subseq);
 bool miis_full_check(const std::deque<interval> &interval_seq, const size_t &q);
 bool miis_full_comb(const std::deque<interval> &interval_seq, const size_t &q);
 
